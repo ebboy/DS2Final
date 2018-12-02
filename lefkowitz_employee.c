@@ -98,16 +98,16 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 						fread(&row->wage, sizeof(float), 1, fileName));
 		case 51:
 			return (	fread(row->name, sizeof(char), sizeof(row->name), fileName) &&
-						fread(&row->a5_q, sizeof(int), 1, fileName) &&
-						fread(&row->a5_pt, sizeof(int), 1, fileName));
+						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
+						fread(&row->a5_q, sizeof(int), 1, fileName));
 		case 52:
 			return (	fread(&row->age, sizeof(int), 1, fileName) &&
-						fread(&row->a5_q, sizeof(int), 1, fileName) &&
-						fread(&row->a5_pt, sizeof(int), 1, fileName));
+						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
+						fread(&row->a5_q, sizeof(int), 1, fileName));
 		case 53:
 			return (	fread(&row->wage, sizeof(float), 1, fileName) &&
-						fread(&row->a5_q, sizeof(int), 1, fileName) &&
-						fread(&row->a5_pt, sizeof(int), 1, fileName));
+						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
+						fread(&row->a5_q, sizeof(int), 1, fileName));
 		case 61:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
@@ -117,12 +117,12 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
 						fread(&row->age, sizeof(int), 1, fileName) &&
-						fread(&row->prox_1, sizeof(int), 1, fileName));
+						fread(&row->prox_2, sizeof(int), 1, fileName));
 		case 63:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
 						fread(&row->wage, sizeof(float), 1, fileName) &&
-						fread(&row->prox_1, sizeof(int), 1, fileName));
+						fread(&row->prox_3, sizeof(int), 1, fileName));
 		case 71:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
@@ -323,8 +323,9 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 
 int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
-	int fileAddress, code, age, usedAddress = -1, wage;
-	int chosenAddress, chosenCode, chosenAge, chosenWage;
+	int fileAddress, code, age, usedAddress = -1;
+	int chosenAddress, chosenCode, chosenAge;
+	float wage, chosenWage;
 	char name[100];
 	char chosenName[100];
 	int i = 1, j = 0;
@@ -334,32 +335,21 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	rewind(input_2);
 	rewind(input_3);
 
-	while(readLine(row, input_1, 41)) {
+	while(readLine(row,input_1,41)){
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		strcpy(chosenName, row->name);
-		printf("----------------------while\n" );
-		printf("fileAddres :%d\n",chosenAddress );
-		printf("Code :%d\n",chosenCode );
-		printf("Name %s\n", chosenName);
-		row->disc_addr = 0;
-		row->code = 0;
-		strcpy(row->name, "");
-		while(readLine(row, input_1, 41))
+		while(readLine(row,input_1,41))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
 			strcpy(name, row->name);
-			printf("Fileaddress2 :%d\n",fileAddress );
-			printf("Code2 :%d\n",code );
-			printf("Name2 %s\n", name);
-
 			if(chosenAddress == -1)
 				break;
 
 			//i++;
 			if(strcmp(chosenName, name) == 0){
-				printf("Não entro no if\n" );
+				printf("Não entro no if---------------------------\n" );
 				fseek(input_1, - ((sizeof(int) *2) + (sizeof(char) * 100)), SEEK_CUR);
 				fwrite(&usedAddress, sizeof(int), 1, input_1);
 				fseek(input_1, sizeof(int) + (sizeof(char) * 100), SEEK_CUR);
@@ -373,10 +363,10 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		}
 		count = 1;
 		j++;
-		printf("J= %d\n", j);
-		rewind(input_1);
-		fseek(input_1, j * sizeof(int) *2  + sizeof(char) * 100, SEEK_SET);
+		fseek(input_1, j * (sizeof(int) *2  + sizeof(char) * sizeof(row->name)), SEEK_SET);
+		if(row) memset(row,0,sizeof(Employee_lk));
 	}
+
 	i = 1; j = 0;
 	count = 1;
 	while(readLine(row, input_2, 42))
@@ -417,6 +407,7 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenWage = row->wage;
+		printf("chosenWage = %f\n", chosenWage);
 		while(readLine(row, input_3, 43))
 		{
 			fileAddress = row->disc_addr;
@@ -427,7 +418,7 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 			i++;
 			if(wage == chosenWage){
-				fseek(input_3, - sizeof(int) * 2 + sizeof(float), SEEK_CUR);
+				fseek(input_3, - sizeof(int) * 2 - sizeof(float), SEEK_CUR);
 				fwrite(&usedAddress, sizeof(int), 1, input_3);
 				fseek(input_3, sizeof(int) + sizeof(float), SEEK_CUR);
 				count++;
@@ -440,29 +431,43 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		}
 		count = 1;
 		j++;
-		fseek(input_3, j * sizeof(int) *2 + sizeof(float), SEEK_SET);
+		fseek(input_3, j * (sizeof(int) *2 + sizeof(float)), SEEK_SET);
 	}
+
 }
 
-int createA6File(Employee_lk * row, FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
-	int fileAddress, code, age, usedAddress = -1, wage;
-	int chosenAddress, chosenCode, chosenAge, chosenWage;
+int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
+	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+	int fileAddress, code, age, usedAddress = -1;
+	int chosenAddress, chosenCode, chosenAge;
+	float chosenWage, wage;
 	char name[100], chosenName[100];
 	int j = 0;
     int equal = 0;
 
-	while(readLine(row, input_1, 51))
+	rewind(input_1);
+	rewind(input_2);
+	rewind(input_3);
+
+	while(readLine(row, input_1, 41))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		strcpy(chosenName, row->name);
-		while(readLine(row, input_1, 51))
+		/*
+		printf("Address %d\n",chosenAddress );
+		printf("Code %d\n",chosenCode );
+		printf("%s\n",chosenName );
+		printf("While---------------\n");
+		*/
+
+		while(readLine(row, input_1, 41))
 		{
 			if(strcmp(chosenName, row->name) == 0){
 		        fwrite(&chosenAddress, sizeof(int), 1, output_1);
 		        fwrite(&chosenCode, sizeof(int), 1, output_1);
-		        fwrite(chosenName, sizeof(char) * 100, 1, output_1);
-		        fwrite(&fileAddress, sizeof(int), 1, output_1);
+		        fwrite(chosenName, sizeof(char), sizeof(chosenName), output_1);
+		        fwrite(&row->disc_addr, sizeof(int), 1, output_1);
 		        equal = 1;
 		        break;
 	        }
@@ -470,28 +475,28 @@ int createA6File(Employee_lk * row, FILE* input_1, FILE* input_2, FILE* input_3,
 		if(equal != 1){
 			fwrite(&chosenAddress, sizeof(int), 1, output_1);
 			fwrite(&chosenCode, sizeof(int), 1, output_1);
-			fwrite(chosenName, sizeof(int), 1, output_1);
+			fwrite(chosenName, sizeof(char), sizeof(chosenName), output_1);
 			fwrite(&usedAddress, sizeof(int), 1, output_1);
 		}
 		j++;
-		fseek(input_1, j * (sizeof(int) * 2) + (sizeof(char) * 100), SEEK_SET);
+		fseek(input_1, j * (sizeof(int) * 2 + sizeof(char) * 100), SEEK_SET);
 		equal = 0;
 	}
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_2, 52))
+	while(readLine(row, input_2, 42))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
-		while(readLine(row, input_2, 52))
+		while(readLine(row, input_2, 42))
 		{
 			if(chosenAge == row->age){
 				fwrite(&chosenAddress, sizeof(int), 1, output_2);
 				fwrite(&chosenCode, sizeof(int), 1, output_2);
 				fwrite(&chosenAge, sizeof(int), 1, output_2);
-				fwrite(&fileAddress, sizeof(int), 1, output_2);
+				fwrite(&row->disc_addr, sizeof(int), 1, output_2);
 				equal = 1;
 				break;
 			}
@@ -509,18 +514,18 @@ int createA6File(Employee_lk * row, FILE* input_1, FILE* input_2, FILE* input_3,
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_3, 53))
+	while(readLine(row, input_3, 43))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenWage = row->wage;
-		while(readLine(row, input_3, 53))
+		while(readLine(row, input_3, 43))
 		{
 			if(chosenWage == row->wage){
 				fwrite(&chosenAddress, sizeof(int), 1, output_3);
 				fwrite(&chosenCode, sizeof(int), 1, output_3);
 				fwrite(&chosenWage, sizeof(float), 1, output_3);
-				fwrite(&fileAddress, sizeof(int), 1, output_3);
+				fwrite(&row->disc_addr, sizeof(int), 1, output_3);
 				equal = 1;
 				break;
 			}
@@ -528,13 +533,14 @@ int createA6File(Employee_lk * row, FILE* input_1, FILE* input_2, FILE* input_3,
 		if(equal != 1){
 			fwrite(&chosenAddress, sizeof(int), 1, output_3);
 			fwrite(&chosenCode, sizeof(int), 1, output_3);
-			fwrite(chosenName, sizeof(float), 1, output_3);
+			fwrite(&chosenWage, sizeof(float), 1, output_3);
 			fwrite(&usedAddress, sizeof(int), 1, output_3);
 		}
 		j++;
-		fseek(input_3, j * sizeof(int) * 2 + sizeof(float), SEEK_SET);
+		fseek(input_3, j * (sizeof(int) * 2 + sizeof(float)), SEEK_SET);
 		equal = 0;
 	}
+
 }
 
 void createA7File(Employee_lk * row, FILE* input, FILE *output, int col){
@@ -714,6 +720,42 @@ void printTableA5(FILE *tableFile, int col) {
 				printf("wage: %.2f\n", emp->wage );
 				printf("a5_pt: %d\n", emp->a5_pt);
 				printf("a5_q: %d\n", emp->a5_q);
+			}
+			break;
+
+	}
+	free(emp);
+}
+
+void printTableA6(FILE *tableFile, int col) {
+	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+	rewind(tableFile);
+	switch (col) {
+		case 1:
+			while(readLine(emp, tableFile, 61)){
+				printf("\n-----------------\n");
+				printf("Address: %d\n",emp->disc_addr);
+				printf("code: %d\n", emp->code);
+				printf("name: %s\n", emp->name);
+				printf("pointer: %d\n", emp->prox_1);
+			}
+		break;
+		case 2:
+			while(readLine(emp, tableFile, 62)){
+				printf("\n-----------------\n");
+				printf("Address: %d\n",emp->disc_addr);
+				printf("code: %d\n", emp->code);
+				printf("Age: %d\n", emp->age);
+				printf("pointer: %d\n", emp->prox_2);
+			}
+			break;
+		case 3:
+			while(readLine(emp, tableFile, 63)){
+				printf("\n-----------------\n");
+				printf("Address: %d\n",emp->disc_addr);
+				printf("code: %d\n", emp->code);
+				printf("wage: %f\n", emp->wage);
+				printf("pointer: %d\n", emp->prox_3);
 			}
 			break;
 

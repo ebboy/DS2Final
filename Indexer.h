@@ -107,9 +107,74 @@ int createA5File(Register * row, FILE* input, FILE *output){
     count = 1;
     j++;
     fseek(input, j * sizeof(int) * 3, SEEK_SET);
-
   }
+  i = 1; j = 0;
+	count = 1;
+	while(readLine(row, input_2, 42))
+	{
+		chosenAddress = row->disc_addr;
+		chosenCode = row->code;
+		chosenAge = row->age;
+		while(readLine(row, input_2, 42))
+		{
+			fileAddress = row->disc_addr;
+			code = row->code;
+			age = row->age;
+			if(chosenAddress == -1)
+				break;
+
+			i++;
+			if(chosenAge == age){
+				fseek(input_2, - sizeof(int) * 3, SEEK_CUR);
+				fwrite(&usedAddress, sizeof(int), 1, input_2);
+				fseek(input_2, sizeof(int)*2, SEEK_CUR);
+				count++;
+			}
+		}
+		if(chosenAddress != -1){
+			fwrite(&chosenAge, sizeof(int), 1, output_2);
+			fwrite(&chosenAddress, sizeof(int), 1, output_2);
+			fwrite(&count, sizeof(int), 1, output_2);
+		}
+		count = 1;
+		j++;
+		fseek(input_2, j * sizeof(int) *3, SEEK_SET);
+	}
+
+	i = 1; j = 0;
+	count = 1;
+	while(readLine(row, input_3, 43))
+	{
+		chosenAddress = row->disc_addr;
+		chosenCode = row->code;
+		chosenWage = row->wage;
+		while(readLine(row, input_3, 43))
+		{
+			fileAddress = row->disc_addr;
+			code = row->code;
+			wage = row->wage;
+			if(chosenAddress == -1)
+				break;
+
+			i++;
+			if(wage == chosenWage){
+				fseek(input_3, - sizeof(int) * 2 + sizeof(float), SEEK_CUR);
+				fwrite(&usedAddress, sizeof(int), 1, input_3);
+				fseek(input_3, sizeof(int) + sizeof(float), SEEK_CUR);
+				count++;
+			}
+		}
+		if(chosenAddress != -1){
+			fwrite(&chosenWage, sizeof(float), 1, output_3);
+			fwrite(&chosenAddress, sizeof(int), 1, output_3);
+			fwrite(&count, sizeof(int), 1, output_3);
+		}
+		count = 1;
+		j++;
+		fseek(input_3, j * (sizeof(int) *2 + sizeof(float)), SEEK_SET);
+	}
 }
+
 
 int createA6File(Register * row, FILE* input, FILE *output){
   int fileAddress, clientCode, age, singleReg = -1;

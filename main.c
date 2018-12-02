@@ -83,7 +83,7 @@ int main(int argc, char const *argv[]) {
 	teste4->status = 1;
 
 	teste5->code = 40;
-	strcpy(teste5->name, "pitui pitata");
+	strcpy(teste5->name, "Joao zao");
 	teste5->age = 32;
 	teste5->wage = 4300.9;
 	// teste5->employee_code = 0;
@@ -99,9 +99,9 @@ int main(int argc, char const *argv[]) {
 	teste6->status = 1;
 
 	teste7->code = 34;
-	strcpy(teste7->name, "loro molo");
-	teste7->age = 23;
-	teste7->wage = 900.9;
+	strcpy(teste7->name, "Joao zao");
+	teste7->age = 27;
+	teste7->wage = 2000.5;
 	// teste7->employee_code = 0;
 	teste7->pointer = -1;
 	teste7->status = 1;
@@ -159,6 +159,10 @@ int main(int argc, char const *argv[]) {
 	FILE * table_a5_age = fopen("table_a5_age.dat", "w+b");
 	FILE * table_a5_wage = fopen("table_a5_wage.dat", "w+b");
 
+	FILE * table_a6_name = fopen("table_a6_name.dat", "w+b");
+	FILE * table_a6_age = fopen("table_a6_age.dat", "w+b");
+	FILE * table_a6_wage = fopen("table_a6_wage.dat", "w+b");
+
 	rewind(hash);
 	createA2File(hash, table_a2);
 	printf("\n\n///////////// A2 \n");
@@ -170,12 +174,18 @@ int main(int argc, char const *argv[]) {
 
 	createA4File(table_a3_name, table_a3_age, table_a3_wage, table_a4_name, table_a4_age, table_a4_wage);
 	printf("\n\n///////////// A4 \n");
-	printTableA4(table_a4_name, 1);
-
-	createA5File(table_a4_name, table_a4_age, table_a4_wage, table_a5_name, table_a5_age, table_a5_wage);
-	printf("\n\n///////////// A5 \n");
-	printTableA5(table_a5_name, 1);
-
+	printTableA4(table_a4_wage, 3);
+	createA6File(table_a4_name, table_a4_age, table_a4_wage, table_a6_name, table_a6_age, table_a6_wage);
+	printf("\n\n///////////// A6 \n");
+	printTableA6(table_a6_wage, 3);
+	//createA5File(table_a4_name, table_a4_age, table_a4_wage, table_a5_name, table_a5_age, table_a5_wage);
+	//printf("\n\n///////////// A5 \n");
+	//printTableA5(table_a5_name, 1);
+	//printf("age -----------------\n");
+	//printTableA5(table_a5_age, 2);
+	//printf("wage -----------------\n");
+	//printTableA5(table_a5_wage, 3);
+	//printTableA4(table_a4_name,1);
 	fclose(hash);
 	fclose(table_a2);
 	fclose(table_a3_name);
@@ -187,6 +197,7 @@ int main(int argc, char const *argv[]) {
 	fclose(table_a5_name);
 	fclose(table_a5_age);
 	fclose(table_a5_wage);
+
 
 	return 0;
 }
