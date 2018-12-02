@@ -174,7 +174,7 @@ int main(int argc, char const *argv[]) {
 
 	createA5File(table_a4_name, table_a4_age, table_a4_wage, table_a5_name, table_a5_age, table_a5_wage);
 	printf("\n\n///////////// A5 \n");
-	printTableA4(table_a5_name, 1);
+	printTableA5(table_a5_name, 1);
 
 	fclose(hash);
 	fclose(table_a2);

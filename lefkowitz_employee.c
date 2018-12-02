@@ -335,44 +335,58 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	rewind(input_3);
 
 	while(readLine(row, input_1, 41)) {
-		chosenAddress = row->a5_pt;
+		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		strcpy(chosenName, row->name);
+		printf("----------------------while\n" );
+		printf("fileAddres :%d\n",chosenAddress );
+		printf("Code :%d\n",chosenCode );
+		printf("Name %s\n", chosenName);
+		row->disc_addr = 0;
+		row->code = 0;
+		strcpy(row->name, "");
 		while(readLine(row, input_1, 41))
 		{
-			fileAddress = row->a5_pt;
+			fileAddress = row->disc_addr;
 			code = row->code;
 			strcpy(name, row->name);
+			printf("Fileaddress2 :%d\n",fileAddress );
+			printf("Code2 :%d\n",code );
+			printf("Name2 %s\n", name);
+
 			if(chosenAddress == -1)
 				break;
 
-			i++;
+			//i++;
 			if(strcmp(chosenName, name) == 0){
-				fseek(input_1, - (sizeof(int) *2) - (sizeof(char) * 100), SEEK_CUR);
+				printf("Não entro no if\n" );
+				fseek(input_1, - ((sizeof(int) *2) + (sizeof(char) * 100)), SEEK_CUR);
 				fwrite(&usedAddress, sizeof(int), 1, input_1);
 				fseek(input_1, sizeof(int) + (sizeof(char) * 100), SEEK_CUR);
 				count++;
 			}
 		}
 		if(chosenAddress != -1){
-			fwrite(chosenName, sizeof(char) * 100, 1, output_1);
+			fwrite(chosenName, sizeof(char), sizeof(chosenName), output_1);
 			fwrite(&chosenAddress, sizeof(int), 1, output_1);
 			fwrite(&count, sizeof(int), 1, output_1);
 		}
 		count = 1;
 		j++;
-		fseek(input_1, j * (sizeof(int) *2) + (sizeof(char) * 100), SEEK_SET);
+		printf("J= %d\n", j);
+		rewind(input_1);
+		fseek(input_1, j * sizeof(int) *2  + sizeof(char) * 100, SEEK_SET);
 	}
 	i = 1; j = 0;
 	count = 1;
 	while(readLine(row, input_2, 42))
 	{
-		chosenAddress = row->a5_pt;
+		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
 		while(readLine(row, input_2, 42))
 		{
-			fileAddress = row->a5_pt;
+			fileAddress = row->disc_addr;
 			code = row->code;
 			age = row->age;
 			if(chosenAddress == -1)
@@ -400,12 +414,12 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	count = 1;
 	while(readLine(row, input_3, 43))
 	{
-		chosenAddress = row->a5_pt;
+		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenWage = row->wage;
 		while(readLine(row, input_3, 43))
 		{
-			fileAddress = row->a5_pt;
+			fileAddress = row->disc_addr;
 			code = row->code;
 			wage = row->wage;
 			if(chosenAddress == -1)
