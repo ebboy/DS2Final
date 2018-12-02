@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "hash_common.c"
+//#include "hash_common.c"
 
 /*
 typedef struct Dependent {
@@ -220,7 +220,7 @@ void dep_createHash(int size, FILE *hashfile){
 	for(int i=0; i< HASH_SIZE;i++){
 		dep_writeDependent(dep, hashfile, i, dep_sizeofDependent());
 	}
-	fclose(hashfile);
+	//fclose(hashfile);
 }
 
 /*

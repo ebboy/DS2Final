@@ -15,14 +15,7 @@ typedef struct Dependent {
 	int pointer;
 } Dependent;
 
-typedef struct Employee {
-	int code;
-	char name[100];
-	int age;
-	float wage;
-	int status; // 1 used, 0 free
-	int pointer;
-} Employee;
+
 */
 
 
@@ -52,12 +45,27 @@ Extras:
  //
 
 
-typedef struct Employee_lk {
+// typedef struct Employee_lk {
+// 	int code;
+// 	char name[100];
+// 	int age;
+// 	float wage;
+// 	int status;
+// 	int pointer;
+// 	int disc_addr;
+// 	int a5_pt;
+// 	int a5_q;
+// 	int prox_1;
+// 	int prox_2;
+// 	int prox_3;
+// } Employee_lk;
+
+typedef struct Dependent_lk {
 	int code;
 	char name[100];
 	int age;
-	float wage;
-	int status;
+	int employee_code;
+	int status; // 1 used, 0 free
 	int pointer;
 	int disc_addr;
 	int a5_pt;
@@ -65,29 +73,31 @@ typedef struct Employee_lk {
 	int prox_1;
 	int prox_2;
 	int prox_3;
-} Employee_lk;
+} Dependent_lk;
 
-int employee_lk_Size() {
+int dependent_lk_Size() {
 	return sizeof(int)  // code
-	+ sizeof(char) * 100 // anme
+	+ sizeof(char) * 100 // name
 	+ sizeof(int) // age
-	+ sizeof(float) // wage
+	+ sizeof(int) // employee_code
+	+ sizeof(int) // status
+	+ sizeof(int) // pointer
 	+ sizeof(int) // disc_addr
 	+ sizeof(int) // a5_pt
-	+ sizeof(int) // a5_q
+	+ sizeof(int) //a5_q
 	+ sizeof(int) // prox_1
 	+ sizeof(int) // prox_2
 	+ sizeof(int); // prox_3
 }
 
-int readLine(Employee_lk * row, FILE *fileName, int table_id){
+int dep_readLine(Dependent_lk * row, FILE *fileName, int table_id){
 
 	switch (table_id) {
 		case 1:
 			return (	fread(&row->code, sizeof(int), 1, fileName) &&
 						fread(row->name, sizeof(char), sizeof(row->name), fileName) &&
 						fread(&row->age, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName) &&
+						fread(&row->employee_code, sizeof(int), 1, fileName) &&
 						fread(&row->status, sizeof(int), 1, fileName) &&
 						fread(&row->pointer, sizeof(int), 1, fileName));
 		case 2:
@@ -95,7 +105,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 						fread(&row->code, sizeof(int), 1, fileName) &&
 						fread(row->name, sizeof(char), sizeof(row->name), fileName) &&
 						fread(&row->age, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName));
+						fread(&row->employee_code, sizeof(int), 1, fileName));
 		case 31:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
@@ -107,7 +117,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 		case 33:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName));
+						fread(&row->employee_code, sizeof(int), 1, fileName));
 		case 41:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
@@ -119,7 +129,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 		case 43:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName));
+						fread(&row->employee_code, sizeof(int), 1, fileName));
 		case 51:
 			return (	fread(row->name, sizeof(char), sizeof(row->name), fileName) &&
 						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
@@ -129,7 +139,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
 						fread(&row->a5_q, sizeof(int), 1, fileName));
 		case 53:
-			return (	fread(&row->wage, sizeof(float), 1, fileName) &&
+			return (	fread(&row->employee_code, sizeof(int), 1, fileName) &&
 						fread(&row->a5_pt, sizeof(int), 1, fileName) &&
 						fread(&row->a5_q, sizeof(int), 1, fileName));
 		case 61:
@@ -145,7 +155,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 		case 63:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName) &&
+						fread(&row->employee_code, sizeof(int), 1, fileName) &&
 						fread(&row->prox_3, sizeof(int), 1, fileName));
 		case 71:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
@@ -160,13 +170,13 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 		case 73:
 			return (	fread(&row->disc_addr, sizeof(int), 1, fileName) &&
 						fread(&row->code, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName) &&
+						fread(&row->employee_code, sizeof(int), 1, fileName) &&
 						fread(&row->prox_3, sizeof(int), 1, fileName));
 		case 8:
 			return (	fread(&row->code, sizeof(int), 1, fileName) &&
 						fread(row->name, sizeof(char), sizeof(row->name), fileName) &&
 						fread(&row->age, sizeof(int), 1, fileName) &&
-						fread(&row->wage, sizeof(float), 1, fileName) &&
+						fread(&row->employee_code, sizeof(int), 1, fileName) &&
 						fread(&row->prox_1, sizeof(int),1, fileName) &&
 						fread(&row->prox_2, sizeof(int),1, fileName) &&
 						fread(&row->prox_3, sizeof(int),1, fileName));
@@ -176,14 +186,14 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 	}
 }
 
-void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileName_3, int table_id){
+void dep_writeLine(Dependent_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileName_3, int table_id){
 	switch (table_id) {
 		case 2:
 			fwrite(&row->disc_addr, sizeof(int), 1, fileName_1);
 			fwrite(&row->code, sizeof(int), 1, fileName_1);
 			fwrite(row->name, sizeof(char), sizeof(row->name), fileName_1);
 			fwrite(&row->age, sizeof(int), 1, fileName_1);
-			fwrite(&row->wage, sizeof(float), 1, fileName_1);
+			fwrite(&row->employee_code, sizeof(int), 1, fileName_1);
 			break;
 
 		case 3:
@@ -197,7 +207,7 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 
 			fwrite(row->name, sizeof(char), sizeof(row->name), fileName_1);
 			fwrite(&row->age, sizeof(int), 1, fileName_2);
-			fwrite(&row->wage, sizeof(float), 1, fileName_3);
+			fwrite(&row->employee_code, sizeof(int), 1, fileName_3);
 			break;
 
 		case 41:
@@ -215,7 +225,7 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 		case 43:
 			fwrite(&row->disc_addr, sizeof(int), 1, fileName_1);
 			fwrite(&row->code, sizeof(int), 1, fileName_1);
-			fwrite(&row->wage, sizeof(float), 1, fileName_1);
+			fwrite(&row->employee_code, sizeof(int), 1, fileName_1);
 			break;
 
 		case 71:
@@ -235,7 +245,7 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 		case 73:
 			fwrite(&row->disc_addr, sizeof(int), 1, fileName_1);
 			fwrite(&row->code, sizeof(int), 1, fileName_1);
-			fwrite(&row->wage, sizeof(float), 1, fileName_1);
+			fwrite(&row->employee_code, sizeof(int), 1, fileName_1);
 			fwrite(&row->prox_3, sizeof(int), 1, fileName_1);
 			break;
 
@@ -243,7 +253,7 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 			fwrite(&row->code, sizeof(int), 1, fileName_1);
 			fwrite(row->name, sizeof(char), sizeof(row->name), fileName_1);
 			fwrite(&row->age, sizeof(int), 1, fileName_1);
-			fwrite(&row->wage, sizeof(float), 1, fileName_1);
+			fwrite(&row->employee_code, sizeof(int), 1, fileName_1);
 			fwrite(&row->prox_1, sizeof(int), 1, fileName_1);
 			fwrite(&row->prox_2, sizeof(int), 1, fileName_1);
 			fwrite(&row->prox_3, sizeof(int), 1, fileName_1);
@@ -256,34 +266,38 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 
 
 
-void createA2File(FILE* input, FILE *output){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+void dep_createA2File(FILE* input, FILE *output){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
+	rewind(input);
 
 	int discAddress = 0;
-	while(readLine(row, input, 1)){
+	while(dep_readLine(row, input, 1)){
 		// fwrite(&fileAddress, sizeof(int),1,output);
 		row->disc_addr = discAddress;
 		//printRow(row);
-		writeLine(row, output, NULL, NULL, 2);
+		dep_writeLine(row, output, NULL, NULL, 2);
 		discAddress++;
 	}
 	free(row);
 }
 
-void createA3File(FILE* input, FILE *output_name, FILE *output_age, FILE *output_wage){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+void dep_createA3File(FILE* input, FILE *output_name, FILE *output_age, FILE *output_employee_code){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
 
 	rewind(input);
-	while (readLine(row, input, 2)) {
-		writeLine(row, output_name, output_age, output_wage, 3);
+	while (dep_readLine(row, input, 2)) {
+		dep_writeLine(row, output_name, output_age, output_employee_code, 3);
 	}
 }
 
-int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *output_name, FILE *output_age, FILE *output_wage){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+int dep_createA4File(FILE* input_name, FILE* input_age, FILE* input_employee_code, FILE *output_name, FILE *output_age, FILE *output_employee_code){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
+	rewind(input_name);
+	rewind(input_age);
+	rewind(input_employee_code);
 
 	int sizeofRow;
-	Employee_lk minEmployee;
+	Dependent_lk minDependent;
 
 	int maxAge = INT_MAX;
 	//int minAge;
@@ -291,73 +305,73 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 	char maxName[100] = {255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255};
 	//char minName[100];
 
-	float maxWage = FLOAT_MAX;
+	int maxEmployeeCode = INT_MAX;
 	//float minWage;
 
-	strcpy(minEmployee.name, maxName);
-	minEmployee.age = maxAge;
-	minEmployee.wage = maxWage;
+	strcpy(minDependent.name, maxName);
+	minDependent.age = maxAge;
+	minDependent.employee_code = maxEmployeeCode;
 	// AGE
 	sizeofRow = sizeof(int) * 2 + sizeof(int);
 	while(1) {
 		rewind(input_age);
-		minEmployee.age = maxAge;
-		while (readLine(row, input_age, 32)) {
-			if(row->age < minEmployee.age) {
-				minEmployee = *row;
+		minDependent.age = maxAge;
+		while (dep_readLine(row, input_age, 32)) {
+			if(row->age < minDependent.age) {
+				minDependent = *row;
 			}
 		}
 
-		if(minEmployee.age == maxAge)
+		if(minDependent.age == maxAge)
 			break;
-		fseek(input_age, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
+		fseek(input_age, (minDependent.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
 		fwrite(&maxAge, sizeof(int), 1, input_age);
-		writeLine(&minEmployee, output_age, NULL, NULL, 42);
+		dep_writeLine(&minDependent, output_age, NULL, NULL, 42);
 	}
 	// NAME
 	sizeofRow = sizeof(int) * 2 + sizeof(char) * sizeof(row->name);
 	while(1) {
 		rewind(input_name);
-		strcpy(minEmployee.name, maxName);
-		while (readLine(row, input_name, 31)) {
-			if(strcmp(row->name, minEmployee.name) < 0) {
-				minEmployee = *row;
+		strcpy(minDependent.name, maxName);
+		while (dep_readLine(row, input_name, 31)) {
+			if(strcmp(row->name, minDependent.name) < 0) {
+				minDependent = *row;
 			}
 		}
 
-		if(strcmp(minEmployee.name, maxName) == 0)
+		if(strcmp(minDependent.name, maxName) == 0)
 			break;
 
-		fseek(input_name, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
+		fseek(input_name, (minDependent.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
 		fwrite(&maxName, sizeof(char), sizeof(row->name), input_name);
-		writeLine(&minEmployee, output_name, NULL, NULL, 41);
+		dep_writeLine(&minDependent, output_name, NULL, NULL, 41);
 	}
-	// WAGE
-	sizeofRow = sizeof(int) * 2 + sizeof(float);
+	// EMPLOYEE_CODE
+	sizeofRow = sizeof(int) * 2 + sizeof(int);
 	while(1) {
-		rewind(input_wage);
-		minEmployee.wage = maxWage;
-		while (readLine(row, input_wage, 33)) {
-			if(row->wage < minEmployee.wage) {
-				minEmployee = *row;
+		rewind(input_employee_code);
+		minDependent.employee_code = maxEmployeeCode;
+		while (dep_readLine(row, input_employee_code, 33)) {
+			if(row->employee_code < minDependent.employee_code) {
+				minDependent = *row;
 			}
 		}
 
-		if(minEmployee.wage == maxWage)
+		if(minDependent.employee_code == maxEmployeeCode)
 			break;
 
-		fseek(input_wage, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
-		fwrite(&maxWage, sizeof(float), 1, input_wage);
-		writeLine(&minEmployee, output_wage, NULL, NULL, 43);
+		fseek(input_employee_code, (minDependent.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
+		fwrite(&maxEmployeeCode, sizeof(int), 1, input_employee_code);
+		dep_writeLine(&minDependent, output_employee_code, NULL, NULL, 43);
 	}
 
 }
 
-int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+int dep_createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
 	int fileAddress, code, age, usedAddress = -1;
 	int chosenAddress, chosenCode, chosenAge;
-	float wage, chosenWage;
+	int employee_code, chosenEmployeeCode;
 	char name[100];
 	char chosenName[100];
 	int i = 1, j = 0;
@@ -367,11 +381,11 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	rewind(input_2);
 	rewind(input_3);
 
-	while(readLine(row,input_1,41)){
+	while(dep_readLine(row,input_1,41)){
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		strcpy(chosenName, row->name);
-		while(readLine(row,input_1,41))
+		while(dep_readLine(row,input_1,41))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
@@ -381,7 +395,7 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 			//i++;
 			if(strcmp(chosenName, name) == 0){
-				printf("Não entro no if---------------------------\n" );
+				printf("Entro no if---------------------------\n" );
 				fseek(input_1, - ((sizeof(int) *2) + (sizeof(char) * 100)), SEEK_CUR);
 				fwrite(&usedAddress, sizeof(int), 1, input_1);
 				fseek(input_1, sizeof(int) + (sizeof(char) * 100), SEEK_CUR);
@@ -396,17 +410,17 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		count = 1;
 		j++;
 		fseek(input_1, j * (sizeof(int) *2  + sizeof(char) * sizeof(row->name)), SEEK_SET);
-		if(row) memset(row,0,sizeof(Employee_lk));
+		if(row) memset(row,0,sizeof(Dependent_lk));
 	}
 
 	i = 1; j = 0;
 	count = 1;
-	while(readLine(row, input_2, 42))
+	while(dep_readLine(row, input_2, 42))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
-		while(readLine(row, input_2, 42))
+		while(dep_readLine(row, input_2, 42))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
@@ -434,54 +448,54 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 	i = 1; j = 0;
 	count = 1;
-	while(readLine(row, input_3, 43))
+	while(dep_readLine(row, input_3, 43))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
-		chosenWage = row->wage;
-		printf("chosenWage = %f\n", chosenWage);
-		while(readLine(row, input_3, 43))
+		chosenEmployeeCode = row->employee_code;
+		printf("chosenEmployeeCode = %d\n", chosenEmployeeCode);
+		while(dep_readLine(row, input_3, 43))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
-			wage = row->wage;
+			employee_code = row->employee_code;
 			if(chosenAddress == -1)
 				break;
 
 			i++;
-			if(wage == chosenWage){
-				fseek(input_3, - sizeof(int) * 2 - sizeof(float), SEEK_CUR);
+			if(employee_code == chosenEmployeeCode){
+				fseek(input_3, - sizeof(int) * 2 - sizeof(int), SEEK_CUR);
 				fwrite(&usedAddress, sizeof(int), 1, input_3);
-				fseek(input_3, sizeof(int) + sizeof(float), SEEK_CUR);
+				fseek(input_3, sizeof(int) + sizeof(int), SEEK_CUR);
 				count++;
 			}
 		}
 		if(chosenAddress != -1){
-			fwrite(&chosenWage, sizeof(float), 1, output_3);
+			fwrite(&chosenEmployeeCode, sizeof(int), 1, output_3);
 			fwrite(&chosenAddress, sizeof(int), 1, output_3);
 			fwrite(&count, sizeof(int), 1, output_3);
 		}
 		count = 1;
 		j++;
-		fseek(input_3, j * (sizeof(int) *2 + sizeof(float)), SEEK_SET);
+		fseek(input_3, j * (sizeof(int) *2 + sizeof(int)), SEEK_SET);
 	}
 
 }
 
-int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+int dep_createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
 	int fileAddress, code, age, usedAddress = -1;
 	int chosenAddress, chosenCode, chosenAge;
-	float chosenWage, wage;
+	int chosenEmployeeCode, employee_code;
 	char name[100], chosenName[100];
 	int j = 0;
-    int equal = 0;
+  int equal = 0;
 
 	rewind(input_1);
 	rewind(input_2);
 	rewind(input_3);
 
-	while(readLine(row, input_1, 41))
+	while(dep_readLine(row, input_1, 41))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
@@ -493,7 +507,7 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		printf("While---------------\n");
 		*/
 
-		while(readLine(row, input_1, 41))
+		while(dep_readLine(row, input_1, 41))
 		{
 			if(strcmp(chosenName, row->name) == 0){
 		        fwrite(&chosenAddress, sizeof(int), 1, output_1);
@@ -517,12 +531,12 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_2, 42))
+	while(dep_readLine(row, input_2, 42))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
-		while(readLine(row, input_2, 42))
+		while(dep_readLine(row, input_2, 42))
 		{
 			if(chosenAge == row->age){
 				fwrite(&chosenAddress, sizeof(int), 1, output_2);
@@ -546,17 +560,17 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_3, 43))
+	while(dep_readLine(row, input_3, 43))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
-		chosenWage = row->wage;
-		while(readLine(row, input_3, 43))
+		chosenEmployeeCode = row->employee_code;
+		while(dep_readLine(row, input_3, 43))
 		{
-			if(chosenWage == row->wage){
+			if(chosenEmployeeCode == row->employee_code){
 				fwrite(&chosenAddress, sizeof(int), 1, output_3);
 				fwrite(&chosenCode, sizeof(int), 1, output_3);
-				fwrite(&chosenWage, sizeof(float), 1, output_3);
+				fwrite(&chosenEmployeeCode, sizeof(int), 1, output_3);
 				fwrite(&row->disc_addr, sizeof(int), 1, output_3);
 				equal = 1;
 				break;
@@ -565,27 +579,27 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		if(equal != 1){
 			fwrite(&chosenAddress, sizeof(int), 1, output_3);
 			fwrite(&chosenCode, sizeof(int), 1, output_3);
-			fwrite(&chosenWage, sizeof(float), 1, output_3);
+			fwrite(&chosenEmployeeCode, sizeof(int), 1, output_3);
 			fwrite(&usedAddress, sizeof(int), 1, output_3);
 		}
 		j++;
-		fseek(input_3, j * (sizeof(int) * 2 + sizeof(float)), SEEK_SET);
+		fseek(input_3, j * (sizeof(int) * 2 + sizeof(int)), SEEK_SET);
 		equal = 0;
 	}
 
 }
 
-void createA7File(FILE* input, FILE *output, int col){
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+void dep_createA7File(FILE* input, FILE *output, int col){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
 		// col = 1 p/ name
 		// col = 2 p/ age
 		// col = 3 p/ wage
-
-	Employee_lk minEmployee;
+		rewind(input);
+	Dependent_lk minDependent;
 	int i, pos_min, sizeofRow;
 
 	int maxCode = INT_MAX;
-	minEmployee.code = maxCode;
+	minDependent.code = maxCode;
 
 	switch (col) {
 		case 1:
@@ -595,7 +609,7 @@ void createA7File(FILE* input, FILE *output, int col){
 			sizeofRow = sizeof(int) * 3 + sizeof(int);
 			break;
 		case 3:
-			sizeofRow = sizeof(int) * 3 + sizeof(float);
+			sizeofRow = sizeof(int) * 3 + sizeof(int);
 			break;
 		default:
 			return ;
@@ -603,42 +617,42 @@ void createA7File(FILE* input, FILE *output, int col){
 
 	while (1) {
 		rewind(input);
-		minEmployee.code = maxCode;
+		minDependent.code = maxCode;
 		i = 0;
-		while (readLine(row, input, (60 + col))) {
-			if(row->code < minEmployee.code){
-				minEmployee = *row;
+		while (dep_readLine(row, input, (60 + col))) {
+			if(row->code < minDependent.code){
+				minDependent = *row;
 
 				pos_min = i;
 			}
 			i++;
 		}
-		if(minEmployee.code == maxCode)
+		if(minDependent.code == maxCode)
 			break;
 		fseek(input, (pos_min * sizeofRow + (sizeof(int))), SEEK_SET);
 		fwrite(&maxCode, sizeof(int), 1, input);
 
-		writeLine(&minEmployee, output, NULL, NULL, (70 + col));
+		dep_writeLine(&minDependent, output, NULL, NULL, (70 + col));
 
 	}
 }
 
-void createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *output){
-	Employee_lk row_a8;
-	Employee_lk row_a1, row_a7_name, row_a7_age,  row_a7_wage;
+void dep_createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_employee_code, FILE *output){
+	Dependent_lk row_a8;
+	Dependent_lk row_a1, row_a7_name, row_a7_age,  row_a7_employee_code;
 	rewind(a1);
 	rewind(a7_name);
 	rewind(a7_age);
-	rewind(a7_wage);
+	rewind(a7_employee_code);
 
-	while(readLine(&row_a1, a1, 1) && readLine(&row_a7_name, a7_name, 71) && readLine(&row_a7_age, a7_age, 72) && readLine(&row_a7_wage, a7_wage, 73)){
+	while(dep_readLine(&row_a1, a1, 1) && dep_readLine(&row_a7_name, a7_name, 71) && dep_readLine(&row_a7_age, a7_age, 72) && dep_readLine(&row_a7_employee_code, a7_employee_code, 73)){
 		printf("Entrei no a8\n" );
 		row_a8 = row_a1;
 		row_a8.prox_1 = row_a7_name.prox_1;
 		row_a8.prox_2 = row_a7_age.prox_2;
-		row_a8.prox_3 = row_a7_wage.prox_3;
+		row_a8.prox_3 = row_a7_employee_code.prox_3;
 
-		writeLine(&row_a8, output, NULL, NULL, 8);
+		dep_writeLine(&row_a8, output, NULL, NULL, 8);
 
 		// fwrite(&row_a1->code, sizeof(int), 1, output);
 		// fwrite(row_a1->name, sizeof(char), sizeof(row->name), output);
@@ -651,252 +665,253 @@ void createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *ou
 
 }
 
-void sortA1File(FILE* input, FILE *output){//TEM DE GERAR UMA COPIA DA HASH ANTES DE RODAR
-	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+void dep_sortA1File(FILE* input, FILE *output){
+	Dependent_lk * row = (Dependent_lk*) malloc(sizeof(Dependent_lk));
+	rewind(input);
 		// col = 1 p/ name
 		// col = 2 p/ age
 		// col = 3 p/ wage
 	int iMin = -1;
-	Employee_lk minEmployee;
+	Dependent_lk minDependent;
 	int i, pos_min,j=0;
 
 	int minCode = INT_MAX,ultimoCodigoInserido = 0;
-	minEmployee.code = minCode;
+	minDependent.code = minCode;
 
 	while (j < HASH_SIZE) {
 		rewind(input);
-		// minEmployee.code = minCode;
+		// minDependent.code = minCode;
 		minCode = INT_MAX;
 		i = 0;
-		while (readLine(row, input,1)) {
+		while (dep_readLine(row, input,1)) {
 			if(row->code < minCode && row->code > ultimoCodigoInserido){
 				minCode = row->code;
 
 				pos_min = i;
-				minEmployee.code = row->code;
-				strcpy(minEmployee.name,row->name);
-				minEmployee.age = row->age;
-				minEmployee.wage = row->wage;
-				minEmployee.status = row->status;
-				minEmployee.pointer = row->pointer;
+				minDependent.code = row->code;
+				strcpy(minDependent.name,row->name);
+				minDependent.age = row->age;
+				minDependent.employee_code = row->employee_code;
+				minDependent.status = row->status;
+				minDependent.pointer = row->pointer;
 			}
 			i++;
 		}
-		// if(minEmployee.code == minCode)
+		// if(minDependent.code == minCode)
 		// 	break;
 		// fseek(input, (pos_min * sizeofRow + (sizeof(int))), SEEK_SET);
 		// fwrite(&minCode, sizeof(int), 1, input);
-		fseek(input,(pos_min * emp_sizeofEmployee()), SEEK_SET);
-		fwrite(&minEmployee.code, sizeof(int), 1, output);
-		fwrite(minEmployee.name, sizeof(char), sizeof(minEmployee.name), output);
-		fwrite(&minEmployee.age, sizeof(int), 1, output);
-		fwrite(&minEmployee.wage, sizeof(float), 1, output);
-		fwrite(&minEmployee.status, sizeof(int), 1, output);
-		fwrite(&minEmployee.pointer, sizeof(int), 1, output);
-		ultimoCodigoInserido = minEmployee.code;
+		fseek(input,(pos_min * dep_sizeofDependent()), SEEK_SET);
+		fwrite(&minDependent.code, sizeof(int), 1, output);
+		fwrite(minDependent.name, sizeof(char), sizeof(minDependent.name), output);
+		fwrite(&minDependent.age, sizeof(int), 1, output);
+		fwrite(&minDependent.employee_code, sizeof(int), 1, output);
+		fwrite(&minDependent.status, sizeof(int), 1, output);
+		fwrite(&minDependent.pointer, sizeof(int), 1, output);
+		ultimoCodigoInserido = minDependent.code;
 		j++;
 
 	}
 }
 
-void printTableA2(FILE *tableFile){
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA2(FILE *tableFile){
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
-	while(readLine(emp, tableFile, 2)){
+	while(dep_readLine(dep, tableFile, 2)){
 		printf("\n-----------------\n");
-		printf("disc_addr: %d\n",emp->disc_addr);
-		printf("code: %d\n", emp->code);
-		printf("name: %s\n", emp->name);
-		printf("age: %d\n", emp->age );
-		printf("wage: %.2f\n", emp->wage );
+		printf("disc_addr: %d\n",dep->disc_addr);
+		printf("code: %d\n", dep->code);
+		printf("name: %s\n", dep->name);
+		printf("age: %d\n", dep->age );
+		printf("employee_code: %d\n", dep->employee_code );
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA3(FILE *tableFile, int col) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA3(FILE *tableFile, int col) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 31)){
+			while(dep_readLine(dep, tableFile, 31)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("name: %s\n", emp->name);
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("name: %s\n", dep->name);
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 32)){
+			while(dep_readLine(dep, tableFile, 32)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("age: %d\n", emp->age );
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("age: %d\n", dep->age );
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 33)){
+			while(dep_readLine(dep, tableFile, 33)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("wage: %.2f\n", emp->wage );
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("employee_code: %d\n", dep->employee_code );
 			}
 			break;
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA4(FILE *tableFile, int col) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA4(FILE *tableFile, int col) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 41)){
+			while(dep_readLine(dep, tableFile, 41)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("name: %s\n", emp->name);
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("name: %s\n", dep->name);
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 42)){
+			while(dep_readLine(dep, tableFile, 42)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("age: %d\n", emp->age );
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("age: %d\n", dep->age );
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 43)){
+			while(dep_readLine(dep, tableFile, 43)){
 				printf("\n-----------------\n");
-				printf("disc_addr: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("wage: %.2f\n", emp->wage );
+				printf("disc_addr: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("employee_code: %d\n", dep->employee_code );
 			}
 			break;
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA5(FILE *tableFile, int col) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA5(FILE *tableFile, int col) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 51)){
+			while(dep_readLine(dep, tableFile, 51)){
 				printf("\n-----------------\n");
-				printf("name: %s\n", emp->name);
-				printf("a5_pt: %d\n", emp->a5_pt);
-				printf("a5_q: %d\n", emp->a5_q);
+				printf("name: %s\n", dep->name);
+				printf("a5_pt: %d\n", dep->a5_pt);
+				printf("a5_q: %d\n", dep->a5_q);
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 52)){
+			while(dep_readLine(dep, tableFile, 52)){
 				printf("\n-----------------\n");
-				printf("age: %d\n", emp->age );
-				printf("a5_pt: %d\n", emp->a5_pt);
-				printf("a5_q: %d\n", emp->a5_q);
+				printf("age: %d\n", dep->age );
+				printf("a5_pt: %d\n", dep->a5_pt);
+				printf("a5_q: %d\n", dep->a5_q);
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 53)){
+			while(dep_readLine(dep, tableFile, 53)){
 				printf("\n-----------------\n");
-				printf("wage: %.2f\n", emp->wage );
-				printf("a5_pt: %d\n", emp->a5_pt);
-				printf("a5_q: %d\n", emp->a5_q);
+				printf("employee_code: %d\n", dep->employee_code );
+				printf("a5_pt: %d\n", dep->a5_pt);
+				printf("a5_q: %d\n", dep->a5_q);
 			}
 			break;
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA6(FILE *tableFile, int col) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA6(FILE *tableFile, int col) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 61)){
+			while(dep_readLine(dep, tableFile, 61)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("name: %s\n", emp->name);
-				printf("pointer: %d\n", emp->prox_1);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("name: %s\n", dep->name);
+				printf("pointer: %d\n", dep->prox_1);
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 62)){
+			while(dep_readLine(dep, tableFile, 62)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("Age: %d\n", emp->age);
-				printf("pointer: %d\n", emp->prox_2);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("Age: %d\n", dep->age);
+				printf("pointer: %d\n", dep->prox_2);
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 63)){
+			while(dep_readLine(dep, tableFile, 63)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("wage: %f\n", emp->wage);
-				printf("pointer: %d\n", emp->prox_3);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("employee_code: %d\n", dep->employee_code);
+				printf("pointer: %d\n", dep->prox_3);
 			}
 			break;
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA7(FILE *tableFile, int col) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA7(FILE *tableFile, int col) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 71)){
+			while(dep_readLine(dep, tableFile, 71)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("name: %s\n", emp->name);
-				printf("pointer: %d\n", emp->prox_1);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("name: %s\n", dep->name);
+				printf("pointer: %d\n", dep->prox_1);
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 72)){
+			while(dep_readLine(dep, tableFile, 72)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("Age: %d\n", emp->age);
-				printf("pointer: %d\n", emp->prox_2);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("Age: %d\n", dep->age);
+				printf("pointer: %d\n", dep->prox_2);
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 73)){
+			while(dep_readLine(dep, tableFile, 73)){
 				printf("\n-----------------\n");
-				printf("Address: %d\n",emp->disc_addr);
-				printf("code: %d\n", emp->code);
-				printf("wage: %f\n", emp->wage);
-				printf("pointer: %d\n", emp->prox_3);
+				printf("Address: %d\n",dep->disc_addr);
+				printf("code: %d\n", dep->code);
+				printf("employee_code: %d\n", dep->employee_code);
+				printf("pointer: %d\n", dep->prox_3);
 			}
 			break;
 
 	}
-	free(emp);
+	free(dep);
 }
 
-void printTableA8(FILE *tableFile) {
-	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
+void dep_printTableA8(FILE *tableFile) {
+	Dependent_lk *dep = (Dependent_lk *) malloc(sizeof(Dependent_lk));
 	rewind(tableFile);
-	while(readLine(emp, tableFile, 8)){
+	while(dep_readLine(dep, tableFile, 8)){
 		printf("\n-----------------\n");
-		printf("Code: %d\n",emp->code);
-		printf("Name: %s\n", emp->name);
-		printf("Age: %d\n", emp->age);
-		printf("wage: %f\n", emp->wage);
-		printf("prox1: %d\n", emp->prox_1);
-		printf("prox2: %d\n", emp->prox_2);
-		printf("prox3: %d\n", emp->prox_3);
+		printf("Code: %d\n",dep->code);
+		printf("Name: %s\n", dep->name);
+		printf("Age: %d\n", dep->age);
+		printf("employee_code: %d\n", dep->employee_code);
+		printf("prox1: %d\n", dep->prox_1);
+		printf("prox2: %d\n", dep->prox_2);
+		printf("prox3: %d\n", dep->prox_3);
 	}
-	free(emp);
+	free(dep);
 }

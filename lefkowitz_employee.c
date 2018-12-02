@@ -56,7 +56,12 @@ int employee_lk_Size() {
 	+ sizeof(int); // prox_3
 }
 
-int readLine(Employee_lk * row, FILE *fileName, int table_id){
+int emp_sizeofA8(){
+	return (sizeof(int) * 5) + (sizeof(char) * 100) + sizeof(float);
+}
+
+
+int emp_readLine(Employee_lk * row, FILE *fileName, int table_id){
 
 	switch (table_id) {
 		case 1:
@@ -152,7 +157,7 @@ int readLine(Employee_lk * row, FILE *fileName, int table_id){
 	}
 }
 
-void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileName_3, int table_id){
+void emp_writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileName_3, int table_id){
 	switch (table_id) {
 		case 2:
 			fwrite(&row->disc_addr, sizeof(int), 1, fileName_1);
@@ -232,32 +237,35 @@ void writeLine(Employee_lk *row, FILE *fileName_1, FILE *fileName_2, FILE *fileN
 
 
 
-void createA2File(FILE* input, FILE *output){
+void emp_createA2File(FILE* input, FILE *output){
+	rewind(input);
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 
 	int discAddress = 0;
-	while(readLine(row, input, 1)){
+	while(emp_readLine(row, input, 1)){
 		// fwrite(&fileAddress, sizeof(int),1,output);
 		row->disc_addr = discAddress;
 		//printRow(row);
-		writeLine(row, output, NULL, NULL, 2);
+		emp_writeLine(row, output, NULL, NULL, 2);
 		discAddress++;
 	}
 	free(row);
 }
 
-void createA3File(FILE* input, FILE *output_name, FILE *output_age, FILE *output_wage){
+void emp_createA3File(FILE* input, FILE *output_name, FILE *output_age, FILE *output_wage){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 
 	rewind(input);
-	while (readLine(row, input, 2)) {
-		writeLine(row, output_name, output_age, output_wage, 3);
+	while (emp_readLine(row, input, 2)) {
+		emp_writeLine(row, output_name, output_age, output_wage, 3);
 	}
 }
 
-int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *output_name, FILE *output_age, FILE *output_wage){
+int emp_createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *output_name, FILE *output_age, FILE *output_wage){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
-
+	rewind(input_name);
+	rewind(input_age);
+	rewind(input_wage);
 	int sizeofRow;
 	Employee_lk minEmployee;
 
@@ -278,7 +286,7 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 	while(1) {
 		rewind(input_age);
 		minEmployee.age = maxAge;
-		while (readLine(row, input_age, 32)) {
+		while (emp_readLine(row, input_age, 32)) {
 			if(row->age < minEmployee.age) {
 				minEmployee = *row;
 			}
@@ -288,14 +296,14 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 			break;
 		fseek(input_age, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
 		fwrite(&maxAge, sizeof(int), 1, input_age);
-		writeLine(&minEmployee, output_age, NULL, NULL, 42);
+		emp_writeLine(&minEmployee, output_age, NULL, NULL, 42);
 	}
 	// NAME
 	sizeofRow = sizeof(int) * 2 + sizeof(char) * sizeof(row->name);
 	while(1) {
 		rewind(input_name);
 		strcpy(minEmployee.name, maxName);
-		while (readLine(row, input_name, 31)) {
+		while (emp_readLine(row, input_name, 31)) {
 			if(strcmp(row->name, minEmployee.name) < 0) {
 				minEmployee = *row;
 			}
@@ -306,14 +314,14 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 
 		fseek(input_name, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
 		fwrite(&maxName, sizeof(char), sizeof(row->name), input_name);
-		writeLine(&minEmployee, output_name, NULL, NULL, 41);
+		emp_writeLine(&minEmployee, output_name, NULL, NULL, 41);
 	}
 	// WAGE
 	sizeofRow = sizeof(int) * 2 + sizeof(float);
 	while(1) {
 		rewind(input_wage);
 		minEmployee.wage = maxWage;
-		while (readLine(row, input_wage, 33)) {
+		while (emp_readLine(row, input_wage, 33)) {
 			if(row->wage < minEmployee.wage) {
 				minEmployee = *row;
 			}
@@ -324,12 +332,12 @@ int createA4File(FILE* input_name, FILE* input_age, FILE* input_wage, FILE *outp
 
 		fseek(input_wage, (minEmployee.disc_addr * sizeofRow + (sizeof(int) * 2)), SEEK_SET);
 		fwrite(&maxWage, sizeof(float), 1, input_wage);
-		writeLine(&minEmployee, output_wage, NULL, NULL, 43);
+		emp_writeLine(&minEmployee, output_wage, NULL, NULL, 43);
 	}
 
 }
 
-int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
+int emp_createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 	int fileAddress, code, age, usedAddress = -1;
 	int chosenAddress, chosenCode, chosenAge;
@@ -343,11 +351,11 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	rewind(input_2);
 	rewind(input_3);
 
-	while(readLine(row,input_1,41)){
+	while(emp_readLine(row,input_1,41)){
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		strcpy(chosenName, row->name);
-		while(readLine(row,input_1,41))
+		while(emp_readLine(row,input_1,41))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
@@ -377,12 +385,12 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 	i = 1; j = 0;
 	count = 1;
-	while(readLine(row, input_2, 42))
+	while(emp_readLine(row, input_2, 42))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
-		while(readLine(row, input_2, 42))
+		while(emp_readLine(row, input_2, 42))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
@@ -410,13 +418,13 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 	i = 1; j = 0;
 	count = 1;
-	while(readLine(row, input_3, 43))
+	while(emp_readLine(row, input_3, 43))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenWage = row->wage;
 		printf("chosenWage = %f\n", chosenWage);
-		while(readLine(row, input_3, 43))
+		while(emp_readLine(row, input_3, 43))
 		{
 			fileAddress = row->disc_addr;
 			code = row->code;
@@ -444,7 +452,7 @@ int createA5File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 }
 
-int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
+int emp_createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FILE *output_2, FILE *output_3){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 	int fileAddress, code, age, usedAddress = -1;
 	int chosenAddress, chosenCode, chosenAge;
@@ -457,7 +465,7 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	rewind(input_2);
 	rewind(input_3);
 
-	while(readLine(row, input_1, 41))
+	while(emp_readLine(row, input_1, 41))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
@@ -469,7 +477,7 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 		printf("While---------------\n");
 		*/
 
-		while(readLine(row, input_1, 41))
+		while(emp_readLine(row, input_1, 41))
 		{
 			if(strcmp(chosenName, row->name) == 0){
 		        fwrite(&chosenAddress, sizeof(int), 1, output_1);
@@ -493,12 +501,12 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_2, 42))
+	while(emp_readLine(row, input_2, 42))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenAge = row->age;
-		while(readLine(row, input_2, 42))
+		while(emp_readLine(row, input_2, 42))
 		{
 			if(chosenAge == row->age){
 				fwrite(&chosenAddress, sizeof(int), 1, output_2);
@@ -522,12 +530,12 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 	j = 0;
 	equal = 0;
 
-	while(readLine(row, input_3, 43))
+	while(emp_readLine(row, input_3, 43))
 	{
 		chosenAddress = row->disc_addr;
 		chosenCode = row->code;
 		chosenWage = row->wage;
-		while(readLine(row, input_3, 43))
+		while(emp_readLine(row, input_3, 43))
 		{
 			if(chosenWage == row->wage){
 				fwrite(&chosenAddress, sizeof(int), 1, output_3);
@@ -551,7 +559,7 @@ int createA6File(FILE* input_1, FILE* input_2, FILE* input_3, FILE *output_1, FI
 
 }
 
-void createA7File(FILE* input, FILE *output, int col){
+void emp_createA7File(FILE* input, FILE *output, int col){
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 		// col = 1 p/ name
 		// col = 2 p/ age
@@ -581,7 +589,7 @@ void createA7File(FILE* input, FILE *output, int col){
 		rewind(input);
 		minEmployee.code = maxCode;
 		i = 0;
-		while (readLine(row, input, (60 + col))) {
+		while (emp_readLine(row, input, (60 + col))) {
 			if(row->code < minEmployee.code){
 				minEmployee = *row;
 
@@ -594,12 +602,12 @@ void createA7File(FILE* input, FILE *output, int col){
 		fseek(input, (pos_min * sizeofRow + (sizeof(int))), SEEK_SET);
 		fwrite(&maxCode, sizeof(int), 1, input);
 
-		writeLine(&minEmployee, output, NULL, NULL, (70 + col));
+		emp_writeLine(&minEmployee, output, NULL, NULL, (70 + col));
 
 	}
 }
 
-void createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *output){
+void emp_createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *output){
 	Employee_lk row_a8;
 	Employee_lk row_a1, row_a7_name, row_a7_age,  row_a7_wage;
 	rewind(a1);
@@ -607,14 +615,14 @@ void createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *ou
 	rewind(a7_age);
 	rewind(a7_wage);
 
-	while(readLine(&row_a1, a1, 1) && readLine(&row_a7_name, a7_name, 71) && readLine(&row_a7_age, a7_age, 72) && readLine(&row_a7_wage, a7_wage, 73)){
+	while(emp_readLine(&row_a1, a1, 1) && emp_readLine(&row_a7_name, a7_name, 71) && emp_readLine(&row_a7_age, a7_age, 72) && emp_readLine(&row_a7_wage, a7_wage, 73)){
 		printf("Entrei no a8\n" );
 		row_a8 = row_a1;
 		row_a8.prox_1 = row_a7_name.prox_1;
 		row_a8.prox_2 = row_a7_age.prox_2;
 		row_a8.prox_3 = row_a7_wage.prox_3;
 
-		writeLine(&row_a8, output, NULL, NULL, 8);
+		emp_writeLine(&row_a8, output, NULL, NULL, 8);
 
 		// fwrite(&row_a1->code, sizeof(int), 1, output);
 		// fwrite(row_a1->name, sizeof(char), sizeof(row->name), output);
@@ -627,7 +635,7 @@ void createA8File(FILE* a1, FILE* a7_name, FILE* a7_age, FILE* a7_wage, FILE *ou
 
 }
 
-void sortA1File(FILE* input, FILE *output){//TEM DE GERAR UMA COPIA DA HASH ANTES DE RODAR
+void emp_sortA1File(FILE* input, FILE *output){//TEM DE GERAR UMA COPIA DA HASH ANTES DE RODAR
 	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
 		// col = 1 p/ name
 		// col = 2 p/ age
@@ -644,7 +652,7 @@ void sortA1File(FILE* input, FILE *output){//TEM DE GERAR UMA COPIA DA HASH ANTE
 		// minEmployee.code = minCode;
 		minCode = INT_MAX;
 		i = 0;
-		while (readLine(row, input,1)) {
+		while (emp_readLine(row, input,1)) {
 			if(row->code < minCode && row->code > ultimoCodigoInserido){
 				minCode = row->code;
 
@@ -675,10 +683,10 @@ void sortA1File(FILE* input, FILE *output){//TEM DE GERAR UMA COPIA DA HASH ANTE
 	}
 }
 
-void printTableA2(FILE *tableFile){
+void emp_printTableA2(FILE *tableFile){
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
-	while(readLine(emp, tableFile, 2)){
+	while(emp_readLine(emp, tableFile, 2)){
 		printf("\n-----------------\n");
 		printf("disc_addr: %d\n",emp->disc_addr);
 		printf("code: %d\n", emp->code);
@@ -690,12 +698,12 @@ void printTableA2(FILE *tableFile){
 	free(emp);
 }
 
-void printTableA3(FILE *tableFile, int col) {
+void emp_printTableA3(FILE *tableFile, int col) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 31)){
+			while(emp_readLine(emp, tableFile, 31)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -703,7 +711,7 @@ void printTableA3(FILE *tableFile, int col) {
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 32)){
+			while(emp_readLine(emp, tableFile, 32)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -711,7 +719,7 @@ void printTableA3(FILE *tableFile, int col) {
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 33)){
+			while(emp_readLine(emp, tableFile, 33)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -723,12 +731,12 @@ void printTableA3(FILE *tableFile, int col) {
 	free(emp);
 }
 
-void printTableA4(FILE *tableFile, int col) {
+void emp_printTableA4(FILE *tableFile, int col) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 41)){
+			while(emp_readLine(emp, tableFile, 41)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -736,7 +744,7 @@ void printTableA4(FILE *tableFile, int col) {
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 42)){
+			while(emp_readLine(emp, tableFile, 42)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -744,7 +752,7 @@ void printTableA4(FILE *tableFile, int col) {
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 43)){
+			while(emp_readLine(emp, tableFile, 43)){
 				printf("\n-----------------\n");
 				printf("disc_addr: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -756,12 +764,12 @@ void printTableA4(FILE *tableFile, int col) {
 	free(emp);
 }
 
-void printTableA5(FILE *tableFile, int col) {
+void emp_printTableA5(FILE *tableFile, int col) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 51)){
+			while(emp_readLine(emp, tableFile, 51)){
 				printf("\n-----------------\n");
 				printf("name: %s\n", emp->name);
 				printf("a5_pt: %d\n", emp->a5_pt);
@@ -769,7 +777,7 @@ void printTableA5(FILE *tableFile, int col) {
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 52)){
+			while(emp_readLine(emp, tableFile, 52)){
 				printf("\n-----------------\n");
 				printf("age: %d\n", emp->age );
 				printf("a5_pt: %d\n", emp->a5_pt);
@@ -777,7 +785,7 @@ void printTableA5(FILE *tableFile, int col) {
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 53)){
+			while(emp_readLine(emp, tableFile, 53)){
 				printf("\n-----------------\n");
 				printf("wage: %.2f\n", emp->wage );
 				printf("a5_pt: %d\n", emp->a5_pt);
@@ -789,12 +797,12 @@ void printTableA5(FILE *tableFile, int col) {
 	free(emp);
 }
 
-void printTableA6(FILE *tableFile, int col) {
+void emp_printTableA6(FILE *tableFile, int col) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 61)){
+			while(emp_readLine(emp, tableFile, 61)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -803,7 +811,7 @@ void printTableA6(FILE *tableFile, int col) {
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 62)){
+			while(emp_readLine(emp, tableFile, 62)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -812,7 +820,7 @@ void printTableA6(FILE *tableFile, int col) {
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 63)){
+			while(emp_readLine(emp, tableFile, 63)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -825,12 +833,12 @@ void printTableA6(FILE *tableFile, int col) {
 	free(emp);
 }
 
-void printTableA7(FILE *tableFile, int col) {
+void emp_printTableA7(FILE *tableFile, int col) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
 	switch (col) {
 		case 1:
-			while(readLine(emp, tableFile, 71)){
+			while(emp_readLine(emp, tableFile, 71)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -839,7 +847,7 @@ void printTableA7(FILE *tableFile, int col) {
 			}
 		break;
 		case 2:
-			while(readLine(emp, tableFile, 72)){
+			while(emp_readLine(emp, tableFile, 72)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -848,7 +856,7 @@ void printTableA7(FILE *tableFile, int col) {
 			}
 			break;
 		case 3:
-			while(readLine(emp, tableFile, 73)){
+			while(emp_readLine(emp, tableFile, 73)){
 				printf("\n-----------------\n");
 				printf("Address: %d\n",emp->disc_addr);
 				printf("code: %d\n", emp->code);
@@ -861,10 +869,10 @@ void printTableA7(FILE *tableFile, int col) {
 	free(emp);
 }
 
-void printTableA8(FILE *tableFile) {
+void emp_printTableA8(FILE *tableFile) {
 	Employee_lk *emp = (Employee_lk *) malloc(sizeof(Employee_lk));
 	rewind(tableFile);
-	while(readLine(emp, tableFile, 8)){
+	while(emp_readLine(emp, tableFile, 8)){
 		printf("\n-----------------\n");
 		printf("Code: %d\n",emp->code);
 		printf("Name: %s\n", emp->name);
