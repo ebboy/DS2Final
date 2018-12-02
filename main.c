@@ -145,6 +145,7 @@ int main(int argc, char const *argv[]) {
 	// printf("\n>>>>>>>>>>>>>>>>FICOU ASSIM<<<<<<<<<<<<<<<<<<<\n");
 	// dep_printDependents(hash);
 
+	FILE * table_a1 = fopen("table_a1.dat", "w+b");
 	FILE * table_a2 = fopen("table_a2.dat", "w+b");
 
 	FILE * table_a3_name = fopen("table_a3_name.dat", "w+b");
@@ -163,8 +164,22 @@ int main(int argc, char const *argv[]) {
 	FILE * table_a6_age = fopen("table_a6_age.dat", "w+b");
 	FILE * table_a6_wage = fopen("table_a6_wage.dat", "w+b");
 
-	rewind(hash);
-	createA2File(hash, table_a2);
+	FILE * table_a7_name = fopen("table_a7_name.dat", "w+b");
+	FILE * table_a7_age = fopen("table_a7_age.dat", "w+b");
+	FILE * table_a7_wage = fopen("table_a7_wage.dat", "w+b");
+	FILE * table_a8 = fopen("table_a8.dat", "w+b");
+	system("cp tabHash.dat copiaHash.dat");
+
+	FILE * copiaHash = fopen("copiaHash.dat", "r+b");
+
+	rewind(copiaHash);
+	sortA1File(copiaHash, table_a1);
+	rewind(copiaHash);
+	printf("a1----------------------------\n" );
+	emp_printEmployees(table_a1);
+
+	rewind(table_a1);
+	createA2File(table_a1, table_a2);
 	printf("\n\n///////////// A2 \n");
 	printTableA2(table_a2);
 
@@ -178,6 +193,17 @@ int main(int argc, char const *argv[]) {
 	createA6File(table_a4_name, table_a4_age, table_a4_wage, table_a6_name, table_a6_age, table_a6_wage);
 	printf("\n\n///////////// A6 \n");
 	printTableA6(table_a6_wage, 3);
+
+	printf("\n--------A6 1-------------\n");
+	printTableA6(table_a6_wage, 3);
+	createA7File(table_a6_name, table_a7_name,1);
+	createA7File(table_a6_age, table_a7_age,2);
+	createA7File(table_a6_wage, table_a7_wage,3);
+	printf("\n--------A7 1-------------\n");
+	printTableA7(table_a7_wage, 3);
+	rewind(table_a1);
+	createA8File(table_a1, table_a7_name, table_a7_age, table_a7_wage, table_a8);
+	printTableA8(table_a8);
 	//createA5File(table_a4_name, table_a4_age, table_a4_wage, table_a5_name, table_a5_age, table_a5_wage);
 	//printf("\n\n///////////// A5 \n");
 	//printTableA5(table_a5_name, 1);
