@@ -90,6 +90,10 @@ int dependent_lk_Size() {
 	+ sizeof(int); // prox_3
 }
 
+int dep_sizeofA8(){
+	return (sizeof(int) * 6) + sizeof(char) * 100;
+}
+
 int dep_readLine(Dependent_lk * row, FILE *fileName, int table_id){
 
 	switch (table_id) {

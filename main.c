@@ -63,7 +63,6 @@ void createLefkowitzDep(FILE * depHash){
 	dep_printTableA8(table_a18);
 
 
-	fclose(depHash);
 	fclose(table_a12);
 	fclose(table_a13_name);
 	fclose(table_a13_age);
@@ -178,6 +177,62 @@ int findEmployeeByName(FILE * a5_name, FILE * a8, char * name){
 	}
 }
 
+char * findEmployeeByAge(FILE * a5_age, FILE * a8, int age){
+	Employee_lk * row = (Employee_lk*) malloc(sizeof(Employee_lk));
+	int pointer = -1;
+	while(emp_readLine(row, a5_age, 52)){
+		if(row->age > age){
+			pointer = row->a5_pt;
+			break;
+		}
+	}
+	if(pointer == -1){
+		char * msg = (char*) malloc(sizeof(char) * 100);
+		strcpy(msg, "Employee not found");
+		return msg;
+	}
+	else{
+		fseek(a8, pointer * emp_sizeofA8(), SEEK_SET);
+		emp_readLine(row, a8, 8);
+		return row->name;
+	}
+}
+
+char * findEmployeeByNumDependent(FILE * a5_dep_employee, FILE * a8_dep, FILE * hashEmp, int count){
+	rewind(hashEmp);
+	Dependent_lk * rowDep = (Dependent_lk*) malloc(sizeof(Dependent_lk));
+	Employee * emp = (Employee*) malloc(sizeof(Employee));
+
+	int pointer = -1;
+	while(dep_readLine(rowDep, a5_dep_employee, 53)){
+		if(rowDep->a5_q > count){
+			pointer = rowDep->a5_pt;
+			break;
+		}
+	}
+	if(pointer == -1){
+		char * msg = (char*) malloc(sizeof(char) * 100);
+		strcpy(msg, "Employee not found");
+		return msg;
+	}
+	else{
+		fseek(a8_dep, pointer * dep_sizeofA8(), SEEK_SET);
+		dep_readLine(rowDep, a8_dep, 8);
+		int position = emp_findEmployee(hashEmp, rowDep->employee_code);
+		if(position == -1){
+			char * msg = (char*) malloc(sizeof(char) * 100);
+			strcpy(msg, "Employee not found");
+			return msg;
+		}
+		else{
+			fseek(hashEmp, position * emp_sizeofEmployee(), SEEK_SET);
+			emp_readEmployee(emp, hashEmp);
+			return emp->name;
+		}
+
+	}
+}
+
 void showMenu(FILE * hash){
 	char input = 'z', inputMenu = 'z';
 	char name[100];
@@ -211,7 +266,6 @@ void showMenu(FILE * hash){
 							scanf("%d", &emp->age);
 							printf("Insert Employee wage:\n");
 							scanf("%f", &emp->wage);
-							emp_insertEmployee(emp, hash);
 							inputMenu = 'z';
 							break;
 						break;
@@ -244,7 +298,7 @@ int main(int argc, char const *argv[]) {
 	Employee * teste7 = (Employee*) malloc(sizeof(Employee));
 
 	// Dependent * teste1 = (Dependent*) malloc(sizeof(Dependent));
-	// Dependent * teste2 = (Dependent*) malloc(sizeof(Dependent));
+	// Dependent * teste2 = (Dependent*) malloc(sizeofFILE * hashEmp(Dependent));
 	// Dependent * teste3 = (Dependent*) malloc(sizeof(Dependent));
 	// Dependent * teste4 = (Dependent*) malloc(sizeof(Dependent));
 	// Dependent * teste5 = (Dependent*) malloc(sizeof(Dependent));
@@ -310,7 +364,6 @@ int main(int argc, char const *argv[]) {
 
 
 	emp_insertEmployee(teste1, hash);
-
 	emp_insertEmployee(teste2, hash);
 
 	emp_insertEmployee(teste3, hash);
@@ -332,24 +385,45 @@ int main(int argc, char const *argv[]) {
 	createLefkowitzEmp(hash);
 
 	int employeecode;
-	Dependent * teste11 = (Dependent*) malloc(sizeof(Dependent));
 	FILE * a5 = fopen("table_a5_name.dat","r+b");
+	FILE * a5_age = fopen("table_a5_age.dat","r+b");
 	FILE * a8 = fopen("table_a8.dat","r+b");
+	FILE * a8Dep = fopen("table_a18.dat","r+b");
+	FILE * a5_emp_code = fopen("table_a15_employee_code.dat","r+b");
+
 	char nome[100];
 	strcpy(nome, "Joao zao");
 	employeecode = findEmployeeByName(a5, a8, nome);
 	printf("EmployeeCode = %d\n", employeecode);
+	rewind(a8);
+	printf("empregado %s", findEmployeeByAge(a5_age, a8, 27));
 
+	Dependent * teste10 = (Dependent*) malloc(sizeof(Dependent));
+	Dependent * teste11 = (Dependent*) malloc(sizeof(Dependent));
+
+	teste10->code = 3;
+	strcpy(teste10->name, "Joaoqweqwe zaoDEP1");
+	teste10->age = 27;
+	// teste11->wage = 2000.5;
+	teste10->employee_code = 25;
+	teste10->pointer = -1;
+	teste10->status = 1;
 
 	teste11->code = 2;
 	strcpy(teste11->name, "Joao zaoDEP1");
 	teste11->age = 27;
 	// teste11->wage = 2000.5;
-	teste11->employee_code = 2;
+	teste11->employee_code = 25;
 	teste11->pointer = -1;
 	teste11->status = 1;
 
+	dep_insertDependent(teste10, depHash);
+	dep_insertDependent(teste11, depHash);
+	rewind(depHash);
+	createLefkowitzDep(depHash);
 	//showMenu(hash);
+
+	printf("\n\nEMPREGADAO %s", findEmployeeByNumDependent(a5_emp_code, a8Dep, hash, 1));
 
 	return 0;
 }
